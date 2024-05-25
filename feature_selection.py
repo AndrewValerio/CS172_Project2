@@ -31,7 +31,7 @@ def loadData(self, filename = "small-test-dataset.txt"):
 
     file.close()
 
-def nearestNeighborClassifier(dataset, point, feature_subset, number_of_instances):
+def nearestNeighbor(dataset, point, feature_subset, number_of_instances):
 	nearest_neighbor = 0
 	shortest_distance = float('inf')
 	for i in range(number_of_instances):
