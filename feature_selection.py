@@ -41,11 +41,8 @@ def nearestNeighbor(dataset, point, feature_subset, number_of_instances):
 			distance = 0
 			for j in range(len(feature_subset)):
 				distance = distance + pow((dataset[i][feature_subset[j]] - dataset[point][feature_subset[j]]), 2)
-
 			distance = math.sqrt(distance)
-
 			if distance < shortest_distance:
 				nearest_neighbor = i 
 				shortest_distance = distance
-
 	return nearest_neighbor
