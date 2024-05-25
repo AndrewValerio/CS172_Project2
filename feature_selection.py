@@ -1,5 +1,4 @@
 import random
-import main
 
 def evaluate(features):
     # Replace this with part 2 stuff
