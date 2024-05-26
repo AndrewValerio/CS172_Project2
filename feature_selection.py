@@ -31,6 +31,6 @@ def backward_elimination(total_features):
         else:
             break
         print(f"Feature set {set(current_set)} was best, accuracy is {highest_score:.1f}%")   
-    print(f"Feature set {set(best_featureset)} was best, accuracy is {best_setscore:.1f}%")
+    print(f"Finished search!! The best feature subset is {set(best_featureset)} which has an accuracy of {best_setscore:.1f}%")
 
-    return 
+    return best_featureset, best_setscore
