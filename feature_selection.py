@@ -46,3 +46,9 @@ def nearestNeighbor(dataset, point, feature_subset, number_of_instances):
 				nearest_neighbor = i 
 				shortest_distance = distance
 	return nearest_neighbor
+
+class Classifier_Class():
+    def train():
+        pass
+    def test():
+        pass
