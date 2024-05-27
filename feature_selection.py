@@ -13,9 +13,10 @@ def backward_elimination(total_features):
     current_set = set(range(1, total_features + 1))
     best_featureset = current_set.copy()
     best_setscore = -1
+
     while current_set:
-        highest_score = -1
-        worst_feature = None
+        highest_score, worst_feature = -1, None
+        
         for feature in current_set:
             temp_set = current_set - {feature}
             score = evaluate(temp_set) * 100
@@ -33,4 +34,4 @@ def backward_elimination(total_features):
         print(f"Feature set {set(current_set)} was best, accuracy is {highest_score:.1f}%")   
     print(f"Finished search!! The best feature subset is {set(best_featureset)} which has an accuracy of {best_setscore:.1f}%")
 
-    return best_featureset, best_setscore
+    return
