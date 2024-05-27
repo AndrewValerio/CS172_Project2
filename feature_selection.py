@@ -59,23 +59,32 @@ def backward_elimination(total_features):
 
     return best_featureset, best_setscore
 
-def loadData(self, filename = "small-test-dataset.txt"):
-    self.dataVals = {} # dictionary that will hold the data
-    file = open(filename, 'r')
-    data = file.readlines() # read all lines into a list
-    for row in data: # parse the row
-        row = row.split('\n')
-        row = row[0].split(' ')
-        row.remove('')
+class DataLoader:
+    def init(self, filename = "small-test-dataset.txt"):
+        self.dataVals = {} # dictionary that will hold the data
+        self.loadData(filename)
 
-        classVal = int(row[0][0]) # get the instance class
+    def loadData(self, filename):
+        self.dataVals = {} # dictionary that will hold the data
+        file = open(filename, 'r')
+        data = file.readlines() # read all lines into a list
+        for row in data: # parse the row
+            row = row.strip().split()  # remove leading/trailing whitespace and split by whitespace
 
-        for i in row[1:]:
-            for j in i.split(): # takes care of any whitespace that got through
-                instances = self.dataVals.get(classVal, [])
-                instances.append(float(j)) # python float() converts IEEE to double automatically
-                self.dataVals[classVal] = instances
-    file.close()
+            if not row:  # skip empty lines
+                continue
+
+            try:
+                classVal = int(float(row[0]))  # get the instance class
+            except ValueError:
+                print(f"Unexpected data format: {row}")
+                continue
+
+            instances = self.dataVals.get(classVal, [])
+            instances.append([float(i) for i in row[1:]])  # convert features to float and append
+            self.dataVals[classVal] = instances
+
+        file.close()
 
 class Classifier_Class():
     def __init__(self):
