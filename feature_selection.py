@@ -38,8 +38,6 @@ class Classifier_Class():
         self.labels = []
 
     def train(self, data):
-        self.training_data = []
-        self.labels = []
         for class_label, instances in data.items():
             for instance in instances:
                 self.training_data.append(instance)
@@ -54,7 +52,6 @@ class Classifier_Class():
             if distance < min_distance:
                 min_distance = distance
                 nearest_label = self.labels[i]
-        
         return nearest_label
     
     def nearest_neighbor(self, dataset, point, feature_subset, number_of_instances):
