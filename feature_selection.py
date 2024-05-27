@@ -56,3 +56,19 @@ class Classifier_Class():
                 nearest_label = self.labels[i]
         
         return nearest_label
+    
+    def nearest_neighbor(self, dataset, point, feature_subset, number_of_instances):
+        nearest_neighbor = 0
+        shortest_distance = float('inf')
+        for i in range(number_of_instances):
+            if point == i:
+                continue
+            else:
+                distance = 0
+                for j in feature_subset:
+                    distance += pow((dataset[i][j] - dataset[point][j]), 2)
+                distance = math.sqrt(distance)
+                if distance < shortest_distance:
+                    nearest_neighbor = i 
+                    shortest_distance = distance           
+        return nearest_neighbor
