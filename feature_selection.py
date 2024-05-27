@@ -88,12 +88,11 @@ class Classifier_Class():
                 self.training_data.append(instance)
                 self.labels.append(class_label)
     
-    def test(self, test_instance):
+    def test(self, testing_instance):
         min_distance = float('inf')
         nearest_label = None
-        
         for i, train_instance in enumerate(self.training_data):
-            distance = np.linalg.norm(np.array(test_instance) - np.array(train_instance))
+            distance = np.linalg.norm(np.array(testing_instance) - np.array(train_instance))
             if distance < min_distance:
                 min_distance = distance
                 nearest_label = self.labels[i]
