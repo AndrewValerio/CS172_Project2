@@ -2,12 +2,24 @@ import math
 import random
 
 def evaluate(features):
-    # Replace this with part 2 stuff
-    return random.random()
+    # Initialize your data loader, classifier, and validator here...
+    data_loader = DataLoader("small-test-dataset.txt")
+    classifier = Classifier()
+    validator = Validator(classifier)
 
-def forward_selection(total_features):
+    # Load the data and labels
+    data = []
+    labels = []
+    for label, instances in data_loader.dataVals.items():
+        data.extend(instances)
+        labels.extend([label] * len(instances))
+
+    return validator.validate(data, labels, features)
+
+
+def forward_selection(features):
     running_features = []
-    remaining = list(range(1, total_features + 1))
+    remaining = features.copy()
 
     print("Beginning search.")
 
@@ -34,10 +46,12 @@ def forward_selection(total_features):
     return None
 
 
-def backward_elimination(total_features):
-    current_set = set(range(1, total_features + 1))
+def backward_elimination(features):
+    current_set = set(features.copy())
     best_featureset = current_set.copy()
-    best_setscore = -1
+    best_setscore = evaluate(current_set) * 100  # Evaluate the full set
+    print(f"Using feature(s) {set(current_set)} accuracy is {best_setscore:.1f}%")
+
     while current_set:
         highest_score = -1
         worst_feature = None
@@ -48,11 +62,10 @@ def backward_elimination(total_features):
             if score > highest_score:
                 worst_feature = feature
                 highest_score = score
-        if worst_feature:
+        if worst_feature and highest_score > best_setscore:
             current_set.remove(worst_feature)
-            if score > best_setscore:
-                best_setscore = score
-                best_featureset = current_set.copy()
+            best_setscore = highest_score
+            best_featureset = current_set.copy()
         else:
             break
         print(f"Feature set {set(current_set)} was best, accuracy is {highest_score:.1f}%")   
@@ -88,6 +101,27 @@ class DataLoader:
             self.dataVals[classVal] = instances
 
         file.close()
+
+        # Normalize the data
+        # self.normalizeData()
+
+    # def normalizeData(self):
+    #     for classVal, instances in self.dataVals.items():
+    #         # Calculate mean and standard deviation for each feature
+    #         num_features = len(instances[0])
+    #         normalized_instances = []
+    #         for instance in instances:
+    #             normalized_instance = []
+    #             for i in range(num_features):
+    #                 feature_values = [instance[i] for instance in instances]
+    #                 mean = sum(feature_values) / len(feature_values)
+    #                 variance = sum((x - mean) ** 2 for x in feature_values) / len(feature_values)
+    #                 std_dev = variance ** 0.5
+
+    #                 # Normalize feature values
+    #                 normalized_instance.append((instance[i] - mean) / std_dev)
+    #             normalized_instances.append(normalized_instance)
+    #         self.dataVals[classVal] = normalized_instances
 
 class Classifier:
     def train(self, data, labels):
