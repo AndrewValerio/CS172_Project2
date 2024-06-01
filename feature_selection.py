@@ -2,27 +2,17 @@ import math
 import random
 import pandas as pd
 import numpy as np
-file_name = 'small-test-dataset.txt'
-df = pd.read_csv(file_name,sep=r'\s+',header=None)
 
-def evaluate(features):
+def evaluate(features, data_norm, labels):
     # classifier and validator here
 
     classifier = Classifier()
     validator = Validator(classifier)
 
-    labels = df.iloc[:,0]
-    non_norm_data = df.iloc[:,1:]
-
-    means = non_norm_data.mean()
-    std = non_norm_data.std()
-
-    data_norm = (non_norm_data - means)/std
-
     return validator.validate(data_norm, labels, features)
 
 
-def forward_selection(features):
+def forward_selection(features, data_norm, labels):
     running_features = []
     remaining = features.copy()
     best_setscore = -1  # Initialize best_setscore to a very low value
@@ -39,7 +29,7 @@ def forward_selection(features):
                 #print("feature is: " + str(feature))
                 current = running_features + [feature]
                 #print("curr feature is: " + str(current_features))
-                score = evaluate(current) * 100
+                score = evaluate(current, data_norm, labels) * 100
                 print(f"Using feature(s) {set(current)} accuracy is {score:.1f}%")
 
                 if score > max_score:
@@ -59,10 +49,12 @@ def forward_selection(features):
     return None
 
 
-def backward_elimination(features):
+def backward_elimination(features, data_norm, labels):
     current_set = features.copy()
     best_featureset = current_set.copy()
-    best_setscore = evaluate(current_set) * 100  # Evaluate the full set
+    print("Beginning search.")
+    
+    best_setscore = evaluate(current_set, data_norm, labels) * 100  # Evaluate the full set
     print(f"Using feature(s) {set(current_set)} accuracy is {best_setscore:.1f}%")
 
     while current_set:
@@ -71,7 +63,7 @@ def backward_elimination(features):
         for feature in current_set:
             temp_set = current_set.copy()
             temp_set.remove(feature)
-            score = evaluate(temp_set) * 100
+            score = evaluate(temp_set, data_norm, labels) * 100
             print(f"Using feature(s) {set(temp_set)} accuracy is {score:.1f}%")
             if score > highest_score:
                 worst_feature = feature
