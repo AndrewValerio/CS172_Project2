@@ -2,7 +2,7 @@ import feature_selection
 import pandas as pd
 
 def main():
-    print("Welcome to Your Name's Feature Selection Algorithm.")
+    print("Welcome to Group 33’s Feature Selection Algorithm.")
     file_name = str(input("Type in the name of the file to test : "))
     #total_features = int(input("Please enter total number of features: "))
 
