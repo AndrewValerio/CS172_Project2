@@ -41,9 +41,10 @@ def forward_selection(features, data_norm, labels):
 
         if best_feature is not None:    
             running_features.append(best_feature)
-            best_setscore = max_score
+            if best_setscore < max_score:
+                best_setscore = max_score
+                best_featureset = running_features.copy()
             remaining.remove(best_feature)
-            best_featureset = running_features.copy()
             print(f"Feature set {set(running_features)} was best, accuracy is {max_score:.1f}%")
 
     print(f"Finished search!! The best feature subset is {set(best_featureset)} which has an accuracy of {best_setscore:.1f}%")

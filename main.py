@@ -20,7 +20,7 @@ def main():
     non_norm_data = df.iloc[:,1:]
 
     # Drop the features not in the user's selected feature subset
-    #non_norm_data = non_norm_data.drop(columns=[f for f in non_norm_data.columns if f not in features])
+    non_norm_data = non_norm_data.drop(columns=[f for f in non_norm_data.columns if f not in features])
 
     # Get the list of feature column indices
     features = non_norm_data.columns.tolist()
