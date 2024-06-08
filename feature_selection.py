@@ -106,6 +106,7 @@ def forward_selection_pruning(features, data_norm, labels):
 def backward_elimination(features, data_norm, labels):
     current_set = features.copy()
     best_featureset = current_set.copy()
+    overall_best = -1
     print("Beginning search.")
     
     best_setscore = evaluate(current_set, data_norm, labels) * 100  # Evaluate the full set
@@ -124,9 +125,13 @@ def backward_elimination(features, data_norm, labels):
                 highest_score = score
         if worst_feature:
             current_set.remove(worst_feature)
-            if score > best_setscore:
-                best_setscore = score
+            #print("score: ", highest_score, " > ", "overall_best ", overall_best)
+            if highest_score > overall_best:
+                best_setscore = highest_score  
+                overall_best = highest_score 
+                #print("Previous best_featureset: ", best_featureset)   
                 best_featureset = current_set.copy()
+                #print("Current best_featureset updated to: ", best_featureset)
         else:
             break
         print(f"Feature set {set(current_set)} was best, accuracy is {highest_score:.1f}%")   
