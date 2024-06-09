@@ -104,12 +104,12 @@ def forward_selection_pruning(features, data_norm, labels):
 
 
 def backward_elimination(features, data_norm, labels):
-    current_set = features.copy()
+    current_set = set(features)
     best_featureset = current_set.copy()
     overall_best = -1
     print("Beginning search.")
     
-    best_setscore = evaluate(current_set, data_norm, labels) * 100  # Evaluate the full set
+    best_setscore = evaluate(list(current_set), data_norm, labels) * 100  # Evaluate the full set
     print(f"Using feature(s) {set(current_set)} accuracy is {best_setscore:.1f}%")
 
     while current_set:
@@ -118,20 +118,15 @@ def backward_elimination(features, data_norm, labels):
         for feature in current_set:
             temp_set = current_set.copy()
             temp_set.remove(feature)
-            score = evaluate(temp_set, data_norm, labels) * 100
+            score = evaluate(list(temp_set), data_norm, labels) * 100
             print(f"Using feature(s) {set(temp_set)} accuracy is {score:.1f}%")
             if score > highest_score:
                 worst_feature = feature
                 highest_score = score
-        if worst_feature:
+        if worst_feature and highest_score > best_setscore:
             current_set.remove(worst_feature)
-            #print("score: ", highest_score, " > ", "overall_best ", overall_best)
-            if highest_score > overall_best:
-                best_setscore = highest_score  
-                overall_best = highest_score 
-                #print("Previous best_featureset: ", best_featureset)   
-                best_featureset = current_set.copy()
-                #print("Current best_featureset updated to: ", best_featureset)
+            best_setscore = highest_score   
+            best_featureset = current_set.copy()
         else:
             break
         print(f"Feature set {set(current_set)} was best, accuracy is {highest_score:.1f}%")   
@@ -147,7 +142,8 @@ class Classifier:
         self.training_labels = labels
 
     def test(self, data_norm):
-        distances = self.training_data.apply(lambda x: np.sqrt(np.sum((x - data_norm) ** 2)), axis=1)
+        data_norm = np.array(data_norm)  # Ensure data_norm is a NumPy array
+        distances = np.sqrt(np.sum((self.training_data - data_norm) ** 2, axis=1))
         predicted_label_index = np.argmin(distances)
         return self.training_labels.loc[predicted_label_index]
 
@@ -157,13 +153,15 @@ class Validator:
 
     def validate(self, data_norm, labels, features):
         correct_predictions = 0
+        indices = np.arange(len(data_norm))
         for i in range(len(data_norm)):
-            train_data = data_norm.drop(i).reset_index(drop=True)
-            train_labels = labels.drop(i).reset_index(drop=True)
+            train_indices = indices[indices != i]
+            train_data = data_norm.iloc[train_indices][features].reset_index(drop=True)
+            train_labels = labels.iloc[train_indices].reset_index(drop=True)
             test_data = data_norm.loc[i, features]
             test_label = labels[i]
 
-            self.classifier.train(train_data[features], train_labels)
+            self.classifier.train(train_data, train_labels)
             prediction = self.classifier.test(test_data)
 
             if prediction == test_label:
