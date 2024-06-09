@@ -123,10 +123,15 @@ def backward_elimination(features, data_norm, labels):
             if score > highest_score:
                 worst_feature = feature
                 highest_score = score
-        if worst_feature and highest_score > best_setscore:
+        #if worst_feature and highest_score > best_setscore:
+        if worst_feature:    
             current_set.remove(worst_feature)
-            best_setscore = highest_score   
-            best_featureset = current_set.copy()
+            if highest_score > overall_best:
+                best_setscore = highest_score  
+                overall_best = highest_score 
+                #print("Previous best_featureset: ", best_featureset)   
+                best_featureset = current_set.copy()
+                #print("Current best_featureset updated to: ", best_featureset)
         else:
             break
         print(f"Feature set {set(current_set)} was best, accuracy is {highest_score:.1f}%")   
