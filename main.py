@@ -1,5 +1,26 @@
 import feature_selection
 import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+
+def plot_features(data_norm, labels, feature1, feature2):
+    # Create a scatter plot of the two features
+    plt.figure(figsize=(8, 6))
+    
+    # Create a color map
+    colors = ['red' if label == 1 else 'blue' for label in labels]
+    
+    plt.scatter(data_norm[feature1], data_norm[feature2], c=colors)
+    plt.xlabel(f'Feature {feature1}')
+    plt.ylabel(f'Feature {feature2}')
+    plt.title(f'Feature {feature1} vs Feature {feature2}')
+    
+    # Create a legend
+    red_patch = mpatches.Patch(color='red', label= f'Class 1')
+    blue_patch = mpatches.Patch(color='blue', label= f'Class 2')
+    plt.legend(handles=[red_patch, blue_patch])
+    
+    plt.show()
 
 def main():
     print("Welcome to Group 33’s Feature Selection Algorithm.")
@@ -40,6 +61,11 @@ def main():
     data_norm = (non_norm_data - means)/std
 
 
+    # data_norm = non_norm_data
+
+    #print(data_norm.head())
+
+
     no_features = []
     no_feature_accuracy = feature_selection.evaluate(no_features, data_norm, labels)
 
@@ -57,6 +83,8 @@ def main():
     else:
         print("Invalid choice. Please enter 1 for Forward Selection or 2 for Backward Elimination.")
         return
+    # Call the function with two features
+    plot_features(data_norm, labels, 2, 3)
 
 if __name__ == "__main__":
     main()
